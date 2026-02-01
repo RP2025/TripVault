@@ -1,0 +1,332 @@
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #0b0b0f;
+  color: #e9e9ef;
+}
+
+.page { min-height: 100vh; }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(11, 11, 15, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #222;
+  padding: 14px 16px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.title { font-size: 16px; font-weight: 650; }
+.subtitle { font-size: 13px; opacity: 0.8; }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.input, .select {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  color: #e9e9ef;
+  padding: 9px 10px;
+  border-radius: 12px;
+}
+
+.btn {
+  background: #161620;
+  border: 1px solid #2a2a2a;
+  color: #e9e9ef;
+  padding: 8px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.primaryBtn {
+  width: 100%;
+  margin-top: 6px;
+  border-color: #3a3a55;
+}
+
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.main { padding: 14px; }
+
+/* ✅ Responsive grid (auto adapts to screen) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+@media (min-width: 900px) {
+  .grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+}
+
+.card {
+  background: #101018;
+  border: 1px solid #1f1f2a;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.card:hover { border-color: #2f2f45; }
+
+.thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;   /* ✅ keeps consistent tiles */
+  object-fit: cover;
+  display: block;
+  background: #0f0f14;
+}
+
+.meta { padding: 8px 10px; font-size: 12px; }
+.name { font-weight: 650; display: flex; align-items: center; gap: 8px; }
+.muted { opacity: 0.75; }
+
+.badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #2c1c00;
+  border: 1px solid #6b3f00;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+
+.modalContent {
+  width: min(980px, 100%);
+  background: #0f0f14;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.modalTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #222;
+}
+
+.modalTitle { opacity: 0.85; font-size: 13px; }
+
+/* ✅ Responsive modal layout: side-by-side when room, stacked when not */
+.modalBody {
+  display: grid;
+  grid-template-columns: 1fr minmax(240px, 320px);
+}
+
+.modalImgWrap { background: #000; }
+.modalImg { width: 100%; height: auto; display: block; }
+
+.side {
+  padding: 12px;
+  border-left: 1px solid #222;
+  font-size: 13px;
+}
+
+.kv { margin: 0 0 10px; }
+.kv b { display: inline-block; width: 90px; opacity: 0.85; }
+
+@media (max-width: 860px) {
+  .modalBody { grid-template-columns: 1fr; }
+  .side { border-left: none; border-top: 1px solid #222; }
+  .titleRow { flex-wrap: wrap; }
+}
+
+/* Auth page */
+.authPage {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.authCard {
+  width: min(420px, 100%);
+  background: #0f0f14;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.authTitle { font-size: 18px; font-weight: 750; margin-bottom: 4px; }
+.authSub { opacity: 0.8; font-size: 13px; margin-bottom: 14px; }
+
+.authForm { display: grid; gap: 10px; }
+
+.authMsg {
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.authSwitch { margin-top: 12px; font-size: 13px; opacity: 0.85; }
+
+.linkBtn {
+  background: transparent;
+  border: none;
+  color: #b9c2ff;
+  cursor: pointer;
+  padding: 0;
+  font-size: 13px;
+}
+.linkBtn:hover { text-decoration: underline; }
+.cardBlock {
+  background: #0f0f14;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.blockTitle {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.list { display: grid; gap: 10px; margin-top: 10px; }
+
+.rowBtn {
+  width: 100%;
+  text-align: left;
+  background: #101018;
+  border: 1px solid #1f1f2a;
+  border-radius: 14px;
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.rowLine {
+  background: #101018;
+  border: 1px solid #1f1f2a;
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.disabledBtn { opacity: 0.6; pointer-events: none; }
+
+/* TripVault UX additions (safe append) */
+
+.tvTabs {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  background: #f0f0f0;
+}
+
+.tvTab {
+  border: 0;
+  background: transparent;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.tvTab.active {
+  background: #111;
+  color: white;
+  opacity: 1;
+}
+
+.tvSection {
+  padding: 14px 16px 0;
+}
+
+.tvSectionTitle {
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.tvPage {
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+}
+
+.tvCard {
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+
+.tvCardTitle {
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.tvRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn.primary {
+  background: #111;
+  color: white;
+}
+
+.tvProgressBar {
+  height: 10px;
+  background: #e6e6e6;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.tvProgressFill {
+  height: 10px;
+  background: #111;
+  border-radius: 999px;
+  transition: width 0.08s linear;
+}
+
+.tvProgressMeta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.tvAlbumSummary {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
