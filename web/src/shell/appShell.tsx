@@ -12,7 +12,11 @@ export default function AppShell() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session ?? null));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
+    // const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+  setSession(session);
+});
+
     return () => sub.subscription.unsubscribe();
   }, []);
 
