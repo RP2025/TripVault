@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { PhotoItem } from "./types";
-import "./app.css";
+import "./App.css";
 import Auth from "./Auth";
 import { supabase } from "./supabaseClient";
 import type { Session } from "@supabase/supabase-js";
