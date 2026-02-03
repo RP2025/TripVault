@@ -77,6 +77,8 @@ export default function AlbumPage() {
   const [urlCache, setUrlCache] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
 
+  const [shared, setShared] = useState<Album[]>([]);
+
   // ✅ progress
   const [prog, setProg] = useState({
     totalFiles: 0,
@@ -92,6 +94,7 @@ export default function AlbumPage() {
 
   useEffect(() => {
     (async () => {
+      
       setMsg(null);
       const uid = (await supabase.auth.getUser()).data.user?.id;
       if (!uid) return;
@@ -136,16 +139,18 @@ export default function AlbumPage() {
   }, [albumId]);
 
   // ✅ Auto-open folder picker if we came via "?pick=1"
-  useEffect(() => {
-    if (!shouldAutoPick) return;
-    if (myRole !== "write") return;
+ useEffect(() => {
+  if (!shouldAutoPick) return;
+  if (!album) return;              // ✅ wait album loaded
+  if (myRole !== "write") return;  // ✅ wait role resolved
 
-    const t = setTimeout(() => {
-      fileInputRef.current?.click();
-    }, 400);
+  const t = setTimeout(() => {
+    fileInputRef.current?.click();
+  }, 400);
 
-    return () => clearTimeout(t);
-  }, [shouldAutoPick, myRole]);
+  return () => clearTimeout(t);
+}, [shouldAutoPick, myRole, album]);
+
 
   // Signed URL loader
   async function getSigned(preview_path: string) {
