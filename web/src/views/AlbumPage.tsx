@@ -281,7 +281,13 @@ export default function AlbumPage() {
     }
 
     // look up profile by email (requires user to have signed up once)
-    const p = await supabase.from("profiles").select("id,email").eq("email", email).maybeSingle();
+    // const p = await supabase.from("profiles").select("id,email").eq("email", email).maybeSingle();
+    const p = await supabase
+  .from("profiles")
+  .select("id,email")
+  .ilike("email", email)   // case-insensitive
+  .maybeSingle();
+
     if (!p.data?.id) {
       setMsg("That email hasn’t signed up yet (profile not found). Ask them to sign up once, then retry.");
       return;

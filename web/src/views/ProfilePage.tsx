@@ -10,11 +10,13 @@ function fmtBytes(n: number) {
   return `${x.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
 
+type SharedAlbum = Album & { my_role?: string };
+
 export default function ProfilePage() {
   const nav = useNavigate();
 
   const [owned, setOwned] = useState<Album[]>([]);
-  const [shared, setShared] = useState<Album[]>([]); // ✅ NEW
+  const [shared, setShared] = useState<SharedAlbum[]>([]);
   const [title, setTitle] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -37,7 +39,7 @@ export default function ProfilePage() {
         return;
       }
 
-      // ✅ Owned albums (RLS already filters to just your owned rows)
+      // ✅ Owned albums (RLS filters)
       const o = await supabase
         .from("albums")
         .select("*")
@@ -53,7 +55,7 @@ export default function ProfilePage() {
       // ✅ Shared with me (album_members join)
       const m = await supabase
         .from("album_members")
-        .select("album_id, role, albums:albums(*)")
+        .select("album_id, role, albums:albums(id,title,created_at,owner_id)")
         .eq("user_id", uid);
 
       if (m.error) {
@@ -63,12 +65,13 @@ export default function ProfilePage() {
       }
 
       const sharedAlbums = (m.data ?? [])
-        .map((row: any) => row.albums)
-        .filter(Boolean) as Album[];
+        .filter((row: any) => row.albums)
+        .map((row: any) => ({ ...(row.albums as Album), my_role: row.role })) as SharedAlbum[];
 
-      // optional: remove duplicates if any
-      const uniq = new Map<string, Album>();
+      // remove duplicates
+      const uniq = new Map<string, SharedAlbum>();
       for (const a of sharedAlbums) uniq.set(a.id, a);
+
       setShared(Array.from(uniq.values()));
     })().catch((e) => {
       console.error(e);
@@ -99,8 +102,6 @@ export default function ProfilePage() {
       const created = res.data as Album;
       setOwned((prev) => [created, ...prev]);
       setTitle("");
-
-      // ✅ respect button choice
       nav(`/album/${created.id}${openPickerAfter ? "?pick=1" : ""}`);
     } finally {
       setLoading(false);
@@ -158,7 +159,7 @@ export default function ProfilePage() {
           {shared.map((a) => (
             <button key={a.id} className="rowBtn" onClick={() => nav(`/album/${a.id}`)}>
               <div className="name">{a.title}</div>
-              <div className="muted">shared</div>
+              <div className="muted">shared{a.my_role ? ` • role: ${a.my_role}` : ""}</div>
             </button>
           ))}
           {shared.length === 0 ? <div className="muted">No shared albums yet.</div> : null}
