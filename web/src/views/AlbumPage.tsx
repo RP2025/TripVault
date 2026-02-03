@@ -77,7 +77,6 @@ export default function AlbumPage() {
   const [urlCache, setUrlCache] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
 
-  const [shared, setShared] = useState<Album[]>([]);
 
   // ✅ progress
   const [prog, setProg] = useState({
