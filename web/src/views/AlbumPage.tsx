@@ -3,6 +3,8 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import type { Album, AlbumMember, MediaItem, Role } from "../domain";
 import * as exifr from "exifr";
+type ProfileLookupRow = { id: string; email: string | null };
+
 
 async function sha256Hex(buf: ArrayBuffer) {
   const hash = await crypto.subtle.digest("SHA-256", buf);
@@ -281,25 +283,32 @@ export default function AlbumPage() {
     }
 
     // look up profile by email (requires user to have signed up once)
-    // const p = await supabase.from("profiles").select("id,email").eq("email", email).maybeSingle();
-    const p = await supabase
-  .from("profiles")
-  .select("id,email")
-  .ilike("email", email)   // case-insensitive
-  .maybeSingle();
+   
 
-    if (!p.data?.id) {
-      setMsg("That email hasn’t signed up yet (profile not found). Ask them to sign up once, then retry.");
-      return;
-    }
+    const { data: pRow, error: pErr } = await supabase
+  .rpc("lookup_profile_by_email", { p_email: email })
+  .maybeSingle<ProfileLookupRow>();
 
-    const res = await supabase.from("album_members").insert({
-      album_id: albumId,
-      user_id: p.data.id,
-      role: shareRole,
-    });
+if (pErr) {
+  setMsg(pErr.message);
+  return;
+}
 
-    if (res.error) { setMsg(res.error.message); return; }
+if (!pRow?.id) {
+  setMsg("That email wasn’t found in profiles. Ask them to sign up once, then retry.");
+  return;
+}
+
+const res = await supabase.from("album_members").insert({
+  album_id: albumId,
+  user_id: pRow.id,
+  role: shareRole,
+});
+
+if (res.error) {
+  setMsg(res.error.message);
+  return;
+}
 
     // refresh members list
     const mem = await supabase
